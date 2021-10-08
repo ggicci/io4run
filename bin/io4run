@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -o errexit
+
+abort() {
+  { if [ "$#" -eq 0 ]; then cat -
+    else echo "io4run: $*"
+    fi
+  } >&2
+  exit 1
+}
+
+command="$1"
+
+command_path="$( command -v "src/${command}" || true )"
+
+if [ -z "${command_path}" ]; then
+  abort "no such command \`${command}'"
+fi
+
+shift 1
+exec "${command_path}" "$@"
+
